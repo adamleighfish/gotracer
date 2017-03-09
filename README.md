@@ -6,7 +6,7 @@ Based off the pathtracer outlined in the book "Ray Tracing in One Weekend" by Pe
 ---
 ![Examples](http://i.imgur.com/38ffKq3.png)
 ---
-A fairly simple application right now. Currently generates three 3 large sphere surrounded by a field of smaller spheres of
+A fairly simple application right now. Currently generates three large sphere surrounded by a field of smaller spheres of
 various materials and colors. 
 
 ### Features
