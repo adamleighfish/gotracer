@@ -33,8 +33,8 @@ func color(r *pt.Ray, world pt.Hitable, depth int) pt.Vector {
 				newColor := color(&scattered, world, depth + 1)
 				return rec.Material.Color().Multiply(newColor)
 			}
-                        // else return first hit
-			return rec.Color()
+                        // else return shadow
+			return pt.Vector{0.0, 0.0, 0.0}
 		}
 	}
 
