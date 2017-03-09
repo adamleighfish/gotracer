@@ -1,8 +1,6 @@
 # gotracer
-A simple CPU pathtracer written in vanilla Go.
+A simple CPU pathtracer written in vanilla Go based off the pathtracer outlined in the book "Ray Tracing in One Weekend" by Peter Shirley.
 
-
-Based off the pathtracer outlined in the book "Ray Tracing in One Weekend" by Peter Shirley.
 ---
 ![Examples](http://i.imgur.com/38ffKq3.png)
 ---
