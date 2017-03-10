@@ -39,10 +39,13 @@ func CreateCamera(lookfrom Vector, lookat Vector, vup Vector, vfov float64, aspe
 	return &Camera{lowerLeft, horizontal, vertical, origin, u, v, w, lensRadius}
 }
 
-//
+// generate the ray coming out of the camera lens for location (u, v)
 func (c *Camera) GetRay(u, v float64) Ray {
+	// randomly generate an offset vector within the lens to simulate depth of field
 	rd := RandomInUnitDisk().ScalarMulti(c.LensRadius)
 	offset := c.U.ScalarMulti(rd.X).Add(c.V.ScalarMulti(rd.Y))
+
+	// return the ray from the cameara to the location (u, v)
 	return Ray{c.Origin.Add(offset), c.LowerLeft.Add(c.Horizontal.ScalarMulti(u)).Add(c.Vertical.ScalarMulti(v)).Subtract(c.Origin).Subtract(offset)}
 }
 

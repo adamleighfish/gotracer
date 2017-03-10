@@ -15,6 +15,8 @@ func NewSphere(center Vector, radius float64, material Material) *Sphere {
 }
 
 func (s *Sphere) Hit(r *Ray, tMin float64, tMax float64) (bool, HitRecord) {
+
+	// determine the number of intersections with the sphere
 	oc := r.Origin().Subtract(s.Center)
 	var a float64 = r.Direction().Dot(r.Direction())
 	var b float64 = oc.Dot(r.Direction())
@@ -23,8 +25,10 @@ func (s *Sphere) Hit(r *Ray, tMin float64, tMax float64) (bool, HitRecord) {
 
 	rec := HitRecord{Material: s.Material}
 
-	if d > 0.0 {
+	if d > tMin {
 		var temp float64 = (-b - math.Sqrt(d)) / a
+
+		// test both the positive and negative case
 		if temp < tMax && temp > tMin {
 			rec.T = temp
 			rec.P = r.PointAtParameter(rec.T)

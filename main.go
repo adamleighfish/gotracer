@@ -1,12 +1,12 @@
 package main
 
 import (
+	"flag"
 	"fmt"
-	"math"
+	"image/png"
 	"math/rand"
 	"os"
 	"time"
-        "flag"
 
 	pt "github.com/epicdangerfish/gotracer/pathtracer"
 )
@@ -17,73 +17,46 @@ func init() {
 }
 
 func main() {
-	// max color value
-	const c = 255.99
+	// image constraints with default values
+	nx := flag.Int("w", 800, "image width")
+	ny := flag.Int("h", 600, "image height")
+	ns := flag.Int("s", 100, "sample rate")
 
-        // image constraints with default values
-        nx := flag.Int("w", 800, "image width")
-        ny := flag.Int("h", 600, "image height")
-        ns := flag.Int("s", 100, "sample rate")
+	// camera constraints with default values
+	fov := flag.Float64("fov", 20, "camera vertical field of view")
+	aperture := flag.Float64("ap", 0.05, "camera aperture")
+	loc := flag.Int("cam", 1, "camera location")
 
-        // camera constraints with default values
-        fov := flag.Float64("fov", 20, "camera vertical field of view")
-        aperture := flag.Float64("ap", 0.05, "camera aperture")
-        loc := flag.Int("cam", 1, "camera location")
+	flag.Parse()
 
-        flag.Parse()
-
-        // choose camara locations
-        var lookfrom pt.Vector
-        if *loc == 1 {
-                lookfrom = pt.Vector{13.0, 2.0, 4.0}
-        } else if *loc == 2 {
-                lookfrom = pt.Vector{-13.0, 2.0, 4.0}
-        } else {
-                lookfrom = pt.Vector{2.0, 2.0, 2.0}
-        }
+	// choose camara locations
+	var lookfrom pt.Vector
+	if *loc == 1 {
+		lookfrom = pt.Vector{13.0, 2.0, 4.0}
+	} else if *loc == 2 {
+		lookfrom = pt.Vector{-13.0, 2.0, 4.0}
+	} else {
+		lookfrom = pt.Vector{0.0, 1.0, 10.0}
+	}
 
 	// camera contraints
 	lookat := pt.Vector{0.0, 0.0, 0.0}
 	orientation := pt.Vector{0.0, 1.0, 0.0}
 	distToFocus := (lookfrom.Subtract(lookat)).Length()
 
-	f, err := os.Create("out.ppm")
+	f, err := os.Create("out.png")
 	check(err, "Error opening file: %v\n")
 
 	defer f.Close()
-
-	_, err = fmt.Fprintf(f, "P3\n%d %d\n255\n", *nx, *ny)
-	check(err, "Error writing to file: %v\n")
 
 	// create the scene to render
 	world := *createScene()
 	camera := pt.CreateCamera(lookfrom, lookat, orientation, *fov, float64(*nx)/float64(*ny), *aperture, distToFocus)
 
-	// main render loop
-	for j := *ny - 1; j >= 0; j-- {
-		for i := 0; i < *nx; i++ {
+	image := pt.Render(&world, camera, *nx, *ny, *ns, 0)
 
-			// anti aliasing loop
-			col := pt.Vector{0.0, 0.0, 0.0}
-			for s := 0; s < *ns; s++ {
-				var u float64 = (float64(i) + rand.Float64()) / float64(*nx)
-				var v float64 = (float64(j) + rand.Float64()) / float64(*ny)
-				r := camera.GetRay(u, v)
-				col = col.Add(color(&r, &world, 0))
-			}
-
-			// gamma correction
-			col = col.ScalarDiv(float64(*ns))
-			col = pt.Vector{math.Sqrt(col.X), math.Sqrt(col.Y), math.Sqrt(col.Z)}
-			var ir int = int(c * col.X)
-			var ig int = int(c * col.Y)
-			var ib int = int(c * col.Z)
-
-			_, err = fmt.Fprintf(f, "%d %d %d\n", ir, ig, ib)
-
-			check(err, "Error writing to file: %v\n")
-		}
-	}
+	err = png.Encode(f, image)
+	check(err, "Error writing to file: %v\n")
 }
 
 func check(e error, s string) {
@@ -91,32 +64,6 @@ func check(e error, s string) {
 		fmt.Fprintf(os.Stderr, s, e)
 		os.Exit(1)
 	}
-}
-
-func color(r *pt.Ray, world pt.Hitable, depth int) pt.Vector {
-
-	// check to see if the ray hits anything and store the information
-	hit, rec := world.Hit(r, 1e-9, 1e9)
-
-	// if there is a hit
-	if hit {
-		if depth < 50 {
-			// scatter the ray
-			success, scattered := rec.Scatter(*r, rec)
-
-			// continue the loop if scattered
-			if success {
-				newColor := color(&scattered, world, depth+1)
-				return rec.Material.Color().Multiply(newColor)
-			}
-			return rec.Material.Color()
-		}
-	}
-
-	// no hit return the background color
-	unitDirection := r.Direction().MakeUnitVector()
-	var t float64 = 0.5 * (unitDirection.Y + 1.0)
-	return pt.Vector{1.0, 1.0, 1.0}.ScalarMulti(1.0 - t).Add(pt.Vector{0.5, 0.7, 1.0}.ScalarMulti(t))
 }
 
 func createScene() *pt.HitableList {
