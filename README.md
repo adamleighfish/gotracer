@@ -13,12 +13,11 @@ various materials and colors.
 * Camera positioning
 * Feild of view
 * Depth of field
-* Outputs to PPM file
+* Outputs to PNG file
 * Anti-alliasing
 * Command line arguments
 
 ### Future Addition
-* PNG support
 * Multicore rendering
 * OBJ file support
 * Additional shapes
