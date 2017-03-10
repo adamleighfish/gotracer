@@ -15,10 +15,10 @@ various materials and colors.
 * Depth of field
 * Outputs to PPM file
 * Anti-alliasing
+* Command line arguments
 
 ### Future Addition
 * PNG support
-* Command line arguments
 * Multicore rendering
 * OBJ file support
 * Additional shapes
