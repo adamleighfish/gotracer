@@ -47,10 +47,12 @@ func (d *Dielectric) Scatter(r Ray, rec HitRecord) (bool, Ray) {
 	return true, Ray{rec.P, refracted}
 }
 
+// return black vector if dielectric does not reflect or refract
 func (d *Dielectric) Color() Vector {
 	return Vector{1.0, 1.0, 1.0}
 }
 
+// Schlick's approx. of the specular reflection coeff.
 func (d *Dielectric) Schlick(cosine float64) float64 {
 	var r0 float64 = (1.0 - d.ReflectIndex) / (1.0 + d.ReflectIndex)
 	r0 = r0 * r0

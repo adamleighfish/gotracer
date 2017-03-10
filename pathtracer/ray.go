@@ -1,7 +1,8 @@
 package pathtracer
 
 type Ray struct {
-	A, B Vector
+	A Vector
+	B Vector
 }
 
 func (r Ray) Origin() Vector {

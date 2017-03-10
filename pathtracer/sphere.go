@@ -5,9 +5,9 @@ import (
 )
 
 type Sphere struct {
-	Center Vector
-	Radius float64
-	Material
+	Center   Vector
+	Radius   float64
+	Material Material
 }
 
 func NewSphere(center Vector, radius float64, material Material) *Sphere {
