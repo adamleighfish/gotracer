@@ -9,8 +9,8 @@ func CreateScene() *HitableList {
 	var list HitableList = HitableList{}
 
 	// create and add the floor
-	floor := Sphere{Center: Vector{0.0, -2000.0, 0.0}, Radius: 2000.0, Material: &Lambertian{Vector{0.9, 0.9, 0.9}}}
-	list.Add(&floor)
+        floor := Sphere{Vector{0.0, -1000.0, 0}, 1000.0, &Lambertian{Vector{0.5, 0.7, 0.5}}}
+        list.Add(&floor)
 
 	// random sphere generation
 	for a := -11; a < 11; a++ {
