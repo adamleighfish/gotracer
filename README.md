@@ -17,6 +17,7 @@ various materials and colors.
 * Anti-alliasing
 * Command line arguments
 * Multicore support
+* Motion blur
 
 ### Future Addition
 * OBJ file support
