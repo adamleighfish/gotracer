@@ -18,8 +18,8 @@ func init() {
 
 func main() {
 	// image constraints with default values
-	nx := flag.Int("w", 800, "image width")
-	ny := flag.Int("h", 600, "image height")
+	nx := flag.Int("w", 960, "image width")
+	ny := flag.Int("h", 540, "image height")
 	ns := flag.Int("s", 100, "sample rate")
 
         // multicore constraints with default value
@@ -27,7 +27,7 @@ func main() {
 
 	// camera constraints with default values
 	fov := flag.Float64("fov", 20, "camera vertical field of view")
-	aperture := flag.Float64("ap", 0.05, "camera aperture")
+	aperture := flag.Float64("ap", 0.0, "camera aperture")
 	loc := flag.Int("cam", 1, "camera location")
         ratio := float64(*nx)/float64(*ny)
 
@@ -38,7 +38,7 @@ func main() {
 
         switch *loc {
         case 1:
-                lookfrom = pt.Vector{13.0, 2.0, 4.0}
+                lookfrom = pt.Vector{13.0, 2.0, 3.0}
         case 2:
                 lookfrom = pt.Vector{-13.0, 2.0, 4.0}
         default:
@@ -48,7 +48,7 @@ func main() {
 	// camera contraints
 	lookat := pt.Vector{0.0, 0.0, 0.0}
 	orientation := pt.Vector{0.0, 1.0, 0.0}
-	distToFocus := (lookfrom.Subtract(lookat)).Length()
+	distToFocus := 10.0
 
 	f, err := os.Create("out.png")
 	check(err, "Error opening file: %v\n")
@@ -57,7 +57,7 @@ func main() {
 
 	// create the scene to render
 	world := *pt.CreateScene()
-	camera := pt.CreateCamera(lookfrom, lookat, orientation, *fov, ratio, *aperture, distToFocus)
+	camera := pt.CreateCamera(lookfrom, lookat, orientation, *fov, ratio, *aperture, distToFocus, 0.0, 1.0)
 
 	image := pt.Render(&world, camera, *nx, *ny, *ns, *cpus)
 

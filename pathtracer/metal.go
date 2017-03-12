@@ -12,7 +12,7 @@ func (m *Metal) Scatter(r Ray, rec HitRecord) (bool, Ray) {
 
 	// account for the fuzziness of the material (max fuzziness at 1.0)
         if m.Fuzz > 1.0 { m.Fuzz = 1.0 }
-	bouncedRay := Ray{rec.P, reflected.Add(RandomInUnitSphere().ScalarMulti(m.Fuzz))}
+	bouncedRay := Ray{rec.P, reflected.Add(RandomInUnitSphere().ScalarMulti(m.Fuzz)), r.Time()}
 
 	// make sure the bounce succeeded
 	bounced := bouncedRay.Direction().Dot(rec.Normal) > 0

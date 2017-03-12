@@ -42,9 +42,9 @@ func (d *Dielectric) Scatter(r Ray, rec HitRecord) (bool, Ray) {
 
 	if rand.Float64() < reflectProb {
 		reflected := r.Direction().Reflect(rec.Normal)
-		return true, Ray{rec.P, reflected}
+		return true, Ray{rec.P, reflected, r.Time()}
 	}
-	return true, Ray{rec.P, refracted}
+	return true, Ray{rec.P, refracted, r.Time()}
 }
 
 // return black vector if dielectric does not reflect or refract

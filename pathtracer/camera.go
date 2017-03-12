@@ -6,16 +6,17 @@ import (
 )
 
 type Camera struct {
-	LowerLeft  Vector
-	Horizontal Vector
-	Vertical   Vector
-	Origin     Vector
-	U, V, W    Vector
-	LensRadius float64
+	LowerLeft       Vector
+	Horizontal      Vector
+	Vertical        Vector
+	Origin          Vector
+	U, V, W         Vector
+	LensRadius      float64
+        T1, T2          float64
 }
 
 // create a camera with the given constraints and return a pointer to it
-func CreateCamera(lookfrom Vector, lookat Vector, vup Vector, vfov float64, aspect float64, aperture float64, focusDist float64) *Camera {
+func CreateCamera(lookfrom, lookat, vup Vector, vfov, aspect, aperture, focusDist, t1, t2 float64) *Camera {
 	var u, v, w Vector
 
 	// variables used for framing picture
@@ -36,7 +37,7 @@ func CreateCamera(lookfrom Vector, lookat Vector, vup Vector, vfov float64, aspe
 	horizontal := u.ScalarMulti(2.0 * halfWidth * focusDist)
 	vertical := v.ScalarMulti(2.0 * halfHeight * focusDist)
 
-	return &Camera{lowerLeft, horizontal, vertical, origin, u, v, w, lensRadius}
+	return &Camera{lowerLeft, horizontal, vertical, origin, u, v, w, lensRadius, t1, t2}
 }
 
 // generate the ray coming out of the camera lens for location (u, v)
@@ -45,8 +46,13 @@ func (c *Camera) GetRay(u, v float64) Ray {
 	rd := RandomInUnitDisk().ScalarMulti(c.LensRadius)
 	offset := c.U.ScalarMulti(rd.X).Add(c.V.ScalarMulti(rd.Y))
 
+        // randomly generate a time for the ray between T1 and T2
+        time := c.T1 + rand.Float64() * (c.T2 - c.T1)
+
 	// return the ray from the cameara to the location (u, v)
-	return Ray{c.Origin.Add(offset), c.LowerLeft.Add(c.Horizontal.ScalarMulti(u)).Add(c.Vertical.ScalarMulti(v)).Subtract(c.Origin).Subtract(offset)}
+        origin := c.Origin.Add(offset)
+        direction := c.LowerLeft.Add(c.Horizontal.ScalarMulti(u)).Add(c.Vertical.ScalarMulti(v)).Subtract(c.Origin).Subtract(offset)
+	return Ray{origin, direction, time}
 }
 
 // return random unit vector in the xy unit disk

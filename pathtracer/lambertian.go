@@ -6,7 +6,7 @@ type Lambertian struct {
 
 func (l *Lambertian) Scatter(r Ray, rec HitRecord) (bool, Ray) {
 	target := rec.Normal.Add(RandomInUnitSphere())
-	return true, Ray{rec.P, target}
+	return true, Ray{rec.P, target, r.Time()}
 }
 
 func (l *Lambertian) Color() Vector {
