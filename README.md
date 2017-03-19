@@ -1,8 +1,8 @@
 # gotracer
-A simple concurrent CPU pathtracer written in vanilla Go. Based off the pathtracer outlined in the book "Ray Tracing in One Weekend" by Peter Shirley.
+A simple concurrent CPU pathtracer written in vanilla Go. Based off the pathtracer outlined in the book "Ray Tracing in One Weekend" and following by Peter Shirley. 
 
 ---
-![Examples](http://i.imgur.com/38ffKq3.png)
+![Examples](http://i.imgur.com/g9jVQzX.png)
 ---
 A fairly simple application right now. Currently generates three large sphere surrounded by a field of smaller spheres of
 various materials and colors. 
@@ -18,6 +18,8 @@ various materials and colors.
 * Command line arguments
 * Multicore support
 * Motion blur
+* BVH tree for faster renderering
+* Basic textures
 
 ### Future Addition
 * OBJ file support
