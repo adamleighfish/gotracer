@@ -1,4 +1,6 @@
 *.ppm
 *.png
+*.prof
+gotracer
 images/
 .DS_Store

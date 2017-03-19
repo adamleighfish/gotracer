@@ -45,3 +45,9 @@ func (s *Sphere) Hit(r *Ray, tMin float64, tMax float64) (bool, HitRecord) {
 	}
 	return false, rec
 }
+
+func (s *Sphere) BoundingBox(t0, t1 float64) (bool, AABB) {
+        a := s.Center.Subtract(Vector{s.Radius, s.Radius, s.Radius})
+        b := s.Center.Add(Vector{s.Radius, s.Radius, s.Radius})
+        return true, AABB{a, b}
+}

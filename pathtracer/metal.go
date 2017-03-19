@@ -1,11 +1,11 @@
 package pathtracer
 
 type Metal struct {
-	Albedo Vector
+	Albedo Texture
 	Fuzz   float64
 }
 
-func (m *Metal) Scatter(r Ray, rec HitRecord) (bool, Ray) {
+func (m *Metal) Scatter(r Ray, rec HitRecord) (bool, Ray, Vector) {
 
 	// find the reflected vector
 	reflected := r.Direction().Reflect(rec.Normal)
@@ -16,9 +16,5 @@ func (m *Metal) Scatter(r Ray, rec HitRecord) (bool, Ray) {
 
 	// make sure the bounce succeeded
 	bounced := bouncedRay.Direction().Dot(rec.Normal) > 0
-	return bounced, bouncedRay
-}
-
-func (m *Metal) Color() Vector {
-	return m.Albedo
+	return bounced, bouncedRay, m.Albedo.Value(0.0, 0.0, rec.P)
 }

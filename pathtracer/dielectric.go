@@ -9,7 +9,7 @@ type Dielectric struct {
 	ReflectIndex float64
 }
 
-func (d *Dielectric) Scatter(r Ray, rec HitRecord) (bool, Ray) {
+func (d *Dielectric) Scatter(r Ray, rec HitRecord) (bool, Ray, Vector) {
 	var outwardNormal, refracted Vector
 	var snell, reflectProb, cosine float64
 	var success bool
@@ -42,14 +42,9 @@ func (d *Dielectric) Scatter(r Ray, rec HitRecord) (bool, Ray) {
 
 	if rand.Float64() < reflectProb {
 		reflected := r.Direction().Reflect(rec.Normal)
-		return true, Ray{rec.P, reflected, r.Time()}
+		return true, Ray{rec.P, reflected, r.Time()}, Vector{1.0, 1.0, 1.0}
 	}
-	return true, Ray{rec.P, refracted, r.Time()}
-}
-
-// return black vector if dielectric does not reflect or refract
-func (d *Dielectric) Color() Vector {
-	return Vector{1.0, 1.0, 1.0}
+	return true, Ray{rec.P, refracted, r.Time()}, Vector{1.0, 1.0, 1.0}
 }
 
 // Schlick's approx. of the specular reflection coeff.

@@ -1,14 +1,12 @@
 package pathtracer
 
 type Lambertian struct {
-	Albedo Vector
+	Albedo Texture
 }
 
-func (l *Lambertian) Scatter(r Ray, rec HitRecord) (bool, Ray) {
+func (l *Lambertian) Scatter(r Ray, rec HitRecord) (bool, Ray, Vector) {
 	target := rec.Normal.Add(RandomInUnitSphere())
-	return true, Ray{rec.P, target, r.Time()}
-}
-
-func (l *Lambertian) Color() Vector {
-	return l.Albedo
+        scattered := Ray{rec.P, target, r.Time()}
+        color := l.Albedo.Value(0.0, 0.0, rec.P)
+	return true, scattered, color
 }

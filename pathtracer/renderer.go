@@ -69,12 +69,12 @@ func getColor(r *Ray, world Hitable, depth int) Vector {
 	if hit {
 		if depth < 50 {
 			// scatter the ray
-			success, scattered := rec.Scatter(*r, rec)
+			success, scattered, tempColor := rec.Material.Scatter(*r, rec)
 
 			// continue the loop if scattered
                         if success {
 			        newColor := getColor(&scattered, world, depth+1)
-			        return rec.Material.Color().Multiply(newColor)
+			        return tempColor.Multiply(newColor)
                         }
                         return Vector{0.0, 0.0, 0.0}
 		}
